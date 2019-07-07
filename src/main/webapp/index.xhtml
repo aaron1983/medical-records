@@ -1,0 +1,129 @@
+<!DOCTYPE html  [
+        <!ENTITY nbsp "&#160;">
+        ]>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+>
+<f:metadata>
+    <f:viewParam name="id" value="#{recordController.record.id}"/>
+    <f:event type="preRenderView" listener="#{recordController.retrieve()}"/>
+</f:metadata>
+<h:head>
+    <title>User profile</title>
+    <link rel="shortcut icon" type="image/x-icon" href="#{resource['img/favicon.png']}"/>
+    <h:outputStylesheet library="css" name="default.css"/>
+    <h:outputStylesheet library="css" name="records_styles.css"/>
+    <h:outputStylesheet library="css" name="dataTables.bulma.css"/>
+    <h:outputStylesheet library="css" name="dataTables.bulma.min.css"/>
+    <h:outputScript name="js/jquery-3.3.1.js"/>
+    <h:outputScript name="js/jquery-3.3.1.min.js"/>
+    <h:outputScript name="js/jquery.dataTables.min.js"/>
+    <h:outputScript name="js/dataTables.bulma.min.js"/>
+    <script type="text/javascript">
+        $(selector).DataTable();
+    </script>
+</h:head>
+
+<h:body>
+    <!--f:metadata>
+
+    </f:metadata-->
+    <p:growl id="growl"/>
+
+    <div class="recordscontainer" style="height: 20px">
+
+    </div>
+    <section style="width: 98%; align-content: center; margin-left: 5px">
+
+
+        <div style="width:84.5%; float:left;  margin-left:0.5%;">
+            <h:form>
+                <div class="recordtablestyle">
+                    <p:panel id="record" header="New Medical Record ">
+                        <h:panelGrid columns="2" id="matchGrid" cellpadding="5">
+                            <p:outputLabel for="firtsName" value="First Name:  &#160;"/>
+                            <h:inputText id="firtsName" style="font-size: 1em; width: 150px"
+                                         value="#{recordBean.currentRecord.firstName}">
+                            </h:inputText>
+                            <p:outputLabel for="lastName" value="Last Name:  &#160;"/>
+                            <h:inputText id="lastName" style="font-size: 1em; width: 150px"
+                                         value="#{recordBean.currentRecord.lastName}">
+                            </h:inputText>
+                            <p:outputLabel for="sex" value="Gender :"/>
+                            <p:selectOneRadio id="sex" value="#{recordBean.currentRecord.gender}" unselectable="true">
+                                <f:selectItem itemLabel="Male" itemValue="false"/>
+                                <f:selectItem itemLabel="Female" itemValue="false"/>
+                            </p:selectOneRadio>
+
+                            <p:outputLabel for="city" value="City :"/>
+                            <h:selectOneMenu id="city" style="font-size: 1.1em; " value="#{cityBean.selectedItem}"
+                                               valueChangeListener="#{recordController.valueChange}">
+                                <f:selectItem itemValue="#{null}" itemLabel="City"/>
+                                <f:selectItems value="#{cityBean.cities}" var="city"
+                                               itemValue="#{city}" itemLabel="#{city}"/>
+
+                                <p:ajax update="@form" listener="#{cityBean.selectedListener}"/>
+                            </h:selectOneMenu>
+                            <p:outputLabel for="country" value="Country :"/>
+                            <h:selectOneMenu id="country" style="font-size: 1.1em; " value="#{countryBean.selectedItem}"
+                                             valueChangeListener="#{countryBean.valueChange}">
+                                <f:selectItem itemValue="#{null}" itemLabel="Country"/>
+                                <f:selectItems value="#{countryBean.countries}" var="country"
+                                               itemValue="#{country}" itemLabel="#{country}"/>
+
+                                <p:ajax update="@form" listener="#{countryBean.selectedListener}"/>
+                            </h:selectOneMenu>
+
+                            <p:outputLabel for="liveWithDiabetes" value="Living with Diabetes?"/>
+                            <p:selectOneRadio id="liveWithDiabetes" value="#{recordBean.currentRecord.gender}"
+                                              unselectable="true">
+                                <f:selectItem itemLabel="Yes" itemValue="false"/>
+                                <f:selectItem itemLabel="No" itemValue="false"/>
+                                <f:selectItem itemLabel="Unknown" itemValue="false"/>
+                            </p:selectOneRadio>
+
+
+                            <p:outputLabel value="&#160;   &#160;"/>
+                            <div jsf:id="buttons">
+                                <p:commandButton update="matchGrid" value="Save" action="#{recordBean.save(record)}"/>
+                            </div>
+
+                        </h:panelGrid>
+
+
+                    </p:panel>
+                </div>
+            </h:form>
+        </div>
+        <div style="width:84.5%; float:left;  margin-left:0.5%;">
+            <h:form>
+                <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <h:outputLabel value="List of medical records"/>
+                    <p:selectBooleanCheckbox value="#{recordController.minorOnly}" itemLabel="Only minors"/>
+                </h:panelGrid>
+
+                <p:dataTable id="tbl" var="record" value="#{dataExporterView.records}"
+                             tableStyle="width:auto;"
+                             resizableColumns="true"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                             paginator="true" rows="15" styleClass="ui-datatable-hor-scroll"
+                             rowClasses="oddRow,evenRow">
+
+                     <p:column>
+                        <f:facet name="header">
+                            <h:outputText value=""/>
+                        </f:facet>
+                        <h:outputText value="#{record.firstName} #{record.lastName} (#{record.gender}),#{record.age} - #{record.city} (#{record.country})"/>
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+        </div>
+
+        <div style="clear:both"/>
+    </section>
+</h:body>
+</html>

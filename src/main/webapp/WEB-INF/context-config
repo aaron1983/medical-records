@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cxf="http://cxf.apache.org/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd     http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+    <context:property-placeholder/>
+    <context:annotation-config/>
+    <!--context:component-scan base-package="org.savics.records.*"/-->
+    <tx:annotation-driven/>
+    <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"/>
+    <jaxrs:server id="recordService" address="/v1">
+        <jaxrs:serviceBeans>
+            <bean class="org.savics.records.rest.RecordService"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="jsonProvider"/>
+            <ref bean="jaxbProvider"/>
+            <ref bean="jsonEntityProvider"/>
+            <ref bean="xmlEntityProvider"/>
+        </jaxrs:providers>
+    </jaxrs:server>
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging />
+        </cxf:features>
+    </cxf:bus>
+
+    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+    <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
+        <property name="unmarshallAsJaxbElement" value="true"/>
+        <property name="marshallAsJaxbElement" value="true"/>
+    </bean>
+    <bean id="jsonEntityProvider" class="org.savics.records.provider.JsonEntityProvider"/>
+    <bean id="xmlEntityProvider" class="org.savics.records.provider.XMLEntityProvider"/>
+
+
+
+</beans>
